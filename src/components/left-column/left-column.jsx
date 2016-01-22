@@ -1,4 +1,8 @@
+//import 'html5sortable';
+import 'jquery-ui/sortable';
 import React from 'react';
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
 import PopupMixin from '../../mixins/popup';
 import Menu from '../library/menu';
 import TaskList from './task-list';
@@ -15,15 +19,37 @@ const LeftColumn = React.createClass({
     },
 
     componentDidMount() {
-        this.props.collection.on('update', this.forceUpdate.bind(this, null), this);
+        this.props.collection.on('update sort', this.forceUpdate.bind(this, null), this);
+
+        $(this.refs.sortable).sortable({
+            items: '> li:not(.disabled)',
+            forcePlaceholderSize: true,
+            placeholderClass: 'drag-placeholder',
+            update: this.handleSortableUpdate
+        });
+
     },
 
     componentWillUnmount() {
         this.props.collection.off(null, null, this);
     },
 
+    handleSortableUpdate(e, ui) {
+        const $node = $(this.refs.sortable);
+
+        $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
+            this.props.collection.get(id).save('position', index, {silent: true});
+        });
+
+        $node.sortable('cancel');
+
+        this.props.collection.sort();
+    },
+
     createTaskList(name) {
-        this.props.collection.create({name});
+        const position = (this.props.collection.length) ? this.props.collection.last().get('position') + 1 : 0;
+
+        this.props.collection.create({name, position});
         this.hidePopup();
         this.setState({focusNewTaskList: true});
     },
@@ -45,9 +71,9 @@ const LeftColumn = React.createClass({
                 <div className="left-column-header">
                     <Menu />
                 </div>
-                <ul className="left-column-content" id="left-column-content">
+                <ul ref="sortable" className="left-column-content" id="left-column-content">
                     {taskLists}
-                    <li>
+                    <li className="disabled">
                         <button className="task-list-header new-list" onClick={this.showPopup}>New List</button>
                     </li>
                 </ul>

@@ -43,6 +43,7 @@ const TaskList = React.createClass({
     render() {
 
         const name = this.props.model.get('name');
+        const id = this.props.model.get('id');
         const popup = () => {
             if (this.state.showPopup)
                 return <EditTaskListPopup name={name} onSubmit={this.edit} onCancel={this.hidePopup} onDelete={this.showDeletePopup} />;
@@ -53,7 +54,7 @@ const TaskList = React.createClass({
         const { focus } = this.props;
 
         return (
-            <li className="task-list">
+            <li className="task-list" data-id={id}>
                 <div className="task-list-header" onClick={this.showPopup}>{name}</div>
                 <ul className="task-list-content">
                     <li className="task-list-item-new">

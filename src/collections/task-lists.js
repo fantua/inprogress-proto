@@ -6,7 +6,12 @@ const TaskLists = Collection.extend({
 
     model: TaskListModel,
 
-    localStorage: new LocalStorage('inprogress-proto-data')
+    localStorage: new LocalStorage('inprogress-proto-data'),
+
+    // sort collection by position
+    comparator(item) {
+        return item.get('position');
+    }
 
 });
 
