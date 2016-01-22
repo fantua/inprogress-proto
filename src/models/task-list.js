@@ -2,7 +2,7 @@ import 'backbone-relational';
 import { RelationalModel as Model, HasMany } from 'backbone';
 import TaskModel from './task';
 
-const List = Model.extend({
+const TaskList = Model.extend({
 
     defaults: {
         id: null,
@@ -19,7 +19,12 @@ const List = Model.extend({
                 key: 'list'
             }
         }
-    ]
+    ],
+
+    initialize() {
+
+    }
+
 });
 
-export default List;
+export default TaskList;

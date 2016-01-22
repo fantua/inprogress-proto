@@ -1,8 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import ListsCollection from './collections/lists';
+import TaskListsCollection from './collections/task-lists';
+import App from './components/app';
+import Fixture from './fixtures/data';
 
-// cleared
 
+render(<App data={new TaskListsCollection()} />, document.getElementById('app'));
 
 

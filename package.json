@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm run _server & npm run _build-dev",
     "debug": "npm run _server & npm run _build-debug ",
-    "_server": "live-server --host=192.168.1.102 --port=3000 --ignore=src",
+    "_server": "live-server --host=192.168.1.102 --port=3000 --ignore=src --no-browser",
     "build": "NODE_ENV=production browserify src/main.jsx --extension=jsx | uglifyjs --screw-ie8 -c=dead_code,evaluate,loops,unused > build/bundle.js",
     "_build-dev": "NODE_ENV=development watchify src/main.jsx --extension=jsx -o build/bundle.js -p [ livereactload --host 192.168.1.102 ] -dv",
     "_build-debug": "NODE_ENV=development watchify src/main.jsx --extension=jsx -o build/bundle.js -dv"
@@ -29,6 +29,7 @@
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
     "backbone-relational": "^0.10.0",
+    "backbone.localstorage": "^1.1.16",
     "browserify": "^12.0.2",
     "envify": "^3.4.0",
     "html5sortable": "^0.3.1",
