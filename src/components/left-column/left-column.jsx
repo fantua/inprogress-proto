@@ -1,4 +1,3 @@
-//import 'html5sortable';
 import 'jquery-ui/sortable';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -32,6 +31,7 @@ const LeftColumn = React.createClass({
 
     componentWillUnmount() {
         this.props.collection.off(null, null, this);
+        $(this.refs.sortable).sortable('destroy');
     },
 
     handleSortableUpdate(e, ui) {
