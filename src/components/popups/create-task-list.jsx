@@ -26,8 +26,8 @@ const CreateTaskList = React.createClass({
                     <form onSubmit={this.handleSubmit}>
                         <input ref="name" type="text" placeholder="Task List Name" className="tint-two" autoFocus /><br />
                         <div className="dialog-screen-button-holder">
-                            <button type="button" className="dialog-screen-button" onClick={this.handleCancel}>Cancel</button>
-                            <button type="submit" className="dialog-screen-button">Create</button>
+                            <button type="button" className="dialog-screen-button tint-three" onClick={this.handleCancel}>Cancel</button>
+                            <button type="submit" className="dialog-screen-button tint-three">Create</button>
                         </div>
                     </form>
                 </div>

@@ -6,7 +6,7 @@ GENERAL
 
 */
 
-body, input, textarea, keygen, select, button {
+body, input, textarea, keygen, select, button, h1 {
 	margin: 0;
 	padding: 0;
 	font-family: "Open Sans", sans-serif;
@@ -38,6 +38,10 @@ button:focus {
 }
 
 .tint-one { /*Negative actions (red)*/
+	color: #FF7070!important;
+}
+
+.tint-one:hover { /*Negative actions (red)*/
 	color: #FF2E2E!important;
 }
 
@@ -46,7 +50,11 @@ button:focus {
 }
 
 .tint-three { /*Secondary buttons (grey)*/
-	color: rgba(0,0,0,0.15)!important;
+	color: rgba(0,0,0,0.2)!important;
+}
+
+.tint-three:hover {
+	color: rgba(0,0,0,0.3)!important;
 }
 
 .drag-placeholder {
@@ -91,13 +99,12 @@ LEFT COLUMN
 	font-weight: 700;
 	color: #47BAFF;
 /* 			text-transform: uppercase; */
-	cursor: default;
+	cursor: pointer;
 }
 
 .new-list {
 	width: 100%;
-	color: rgba(0,0,0,0.1);
-	padding-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 .task-list-content li {
@@ -347,13 +354,13 @@ DIALOG OVERLAYS
 	font-size: 15px;
 	width: 256px;
 	padding: 8px 10px 8px 0;
-	margin: 0 0 24px 24px;
+	margin: 16px 0 0px 24px;
 	font-weight: 700;
 /* 			text-transform: uppercase; */
-	font-size: 13px;
+	font-size: 14px;
 	color: #000;
 	border: none;
-	border-bottom: 1px solid silver;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
 	background-color: rgba(0,0,0,0);
 	border-radius: 0px;
 	box-shadow: none;
@@ -364,7 +371,7 @@ DIALOG OVERLAYS
 .dialog-screen input[type="text"]:focus {
 	outline: 0;
 	border: none;
-	border-bottom: 1px solid silver;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
 .dialog-screen ::-webkit-input-placeholder { color:rgba(0,0,0,0.1) }
@@ -373,14 +380,18 @@ DIALOG OVERLAYS
 .dialog-screen input:-moz-placeholder { color:rgba(0,0,0,0.1) }
 
 .dialog-screen-button-holder {
-	padding: 0 12px 12px 0;
+	padding: 24px 12px 12px 0;
 	text-align: right;
 }
 
 .dialog-screen-button {
 	display: inline-block;
 	padding: 12px 16px 12px 10px;
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 700;
-	text-transform: uppercase;
+/* 	text-transform: uppercase; */
+}
+
+.dialog-screen-button:hover {
+	color: rgba(0,0,0,0.4)
 }

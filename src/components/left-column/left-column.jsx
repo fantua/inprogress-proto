@@ -74,7 +74,7 @@ const LeftColumn = React.createClass({
                 <ul ref="sortable" className="left-column-content" id="left-column-content">
                     {taskLists}
                     <li className="disabled">
-                        <button className="task-list-header new-list" onClick={this.showPopup}>New List</button>
+                        <button className="task-list-header new-list tint-three" onClick={this.showPopup}>New List</button>
                     </li>
                 </ul>
                 {popup()}

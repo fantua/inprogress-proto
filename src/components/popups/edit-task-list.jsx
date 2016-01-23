@@ -42,8 +42,8 @@ const EditTaskList = React.createClass({
                         <input ref="name" type="text" className="tint-two" placeholder="Task List Name" defaultValue={name} autoFocus /><br />
                         <div className="dialog-screen-button-holder">
                             <button type="button" className="dialog-screen-button tint-three" onClick={this.handleDelete} style={deleteStyle}>Delete List</button>
-                            <button type="button" className="dialog-screen-button" onClick={this.handleCancel}>Cancel</button>
-                            <button type="submit" className="dialog-screen-button">Save</button>
+                            <button type="button" className="dialog-screen-button tint-three" onClick={this.handleCancel}>Cancel</button>
+                            <button type="submit" className="dialog-screen-button tint-three">Save</button>
                         </div>
                     </form>
 
