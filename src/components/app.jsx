@@ -3,7 +3,7 @@ import LeftColumn from './left-column/left-column';
 
 const App = React.createClass({
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.data.fetch();
     },
 

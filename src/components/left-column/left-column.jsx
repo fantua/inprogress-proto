@@ -2,6 +2,7 @@ import 'jquery-ui/sortable';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import UIModel from '../../models/ui';
 import PopupMixin from '../../mixins/popup';
 import Menu from '../library/menu';
 import TaskList from './task-list';
@@ -11,17 +12,12 @@ const LeftColumn = React.createClass({
 
     mixins: [PopupMixin],
 
-    getInitialState() {
-        return {
-            focusNewTaskList: false
-        };
-    },
-
     componentDidMount() {
         this.props.collection.on('update sort', this.forceUpdate.bind(this, null), this);
 
         $(this.refs.sortable).sortable({
             items: '> li:not(.disabled)',
+            handle: '> .task-list-header',
             forcePlaceholderSize: true,
             placeholderClass: 'drag-placeholder',
             update: this.handleSortableUpdate
@@ -38,7 +34,7 @@ const LeftColumn = React.createClass({
         const $node = $(this.refs.sortable);
 
         $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
-            this.props.collection.get(id).save('position', index, {silent: true});
+            this.props.collection.get(id).save({position: index}, {silent: true});
         });
 
         $node.sortable('cancel');
@@ -48,17 +44,18 @@ const LeftColumn = React.createClass({
 
     createTaskList(name) {
         const position = (this.props.collection.length) ? this.props.collection.last().get('position') + 1 : 0;
+        const task = this.props.collection.create({name, position});
 
-        this.props.collection.create({name, position});
         this.hidePopup();
-        this.setState({focusNewTaskList: true});
+        UIModel.set('focusNewTaskFiled', task.get('id'));
     },
 
     render() {
 
-        const taskLists = this.props.collection.map((list, index, arr) => {
-            const focus = this.state.focusNewTaskList && (index + 1 == arr.length);
-            return <TaskList model={list} key={list.get('id')} focus={focus} />;
+        console.log('LeftColumn - render');
+
+        const taskLists = this.props.collection.map((list) => {
+            return <TaskList model={list} key={list.get('id')} />;
         });
 
         const popup = () => {

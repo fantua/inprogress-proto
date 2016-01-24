@@ -1,6 +1,7 @@
 import 'backbone-relational';
 import { RelationalModel as Model, HasMany } from 'backbone';
 import TaskModel from './task';
+import TasksCollection from '../collections/tasks';
 
 const TaskList = Model.extend({
 
@@ -15,8 +16,10 @@ const TaskList = Model.extend({
             type: HasMany,
             key: 'tasks',
             relatedModel: TaskModel,
+            collectionType: TasksCollection,
             reverseRelation: {
-                key: 'list'
+                key: 'parent',
+                includeInJSON: false
             }
         }
     ],
