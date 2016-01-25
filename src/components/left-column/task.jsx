@@ -19,7 +19,7 @@ const Task = React.createClass({
             UIModel.set('timer', setTimeout(() => {
                 UIModel.set({clickCount: 0});
                 this.handleClick();
-            }, 250));
+            }, 200));
         } else {
             clearTimeout(UIModel.get('timer'));
             UIModel.set({clickCount: 0});
