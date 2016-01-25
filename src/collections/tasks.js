@@ -8,6 +8,7 @@ const Tasks = Collection.extend({
 
     initialize() {
         this.on('sort', () => this.parent.trigger('change', this.parent));
+        this.on('remove', () => this.parent.save(null, {silent: true}));
     },
 
     // sort collection by position

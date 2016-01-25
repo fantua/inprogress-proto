@@ -33,6 +33,10 @@ const Task = Model.extend({
     save(attributes, options = {}) {
         this.set(attributes, options);
         this.collection.parent.save(null, {silent: true});
+    },
+
+    destroy() {
+        this.collection.remove(this);
     }
 
 });

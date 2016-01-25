@@ -51,10 +51,7 @@ const Task = React.createClass({
 
         console.log('Task - render');
 
-        console.log(this.props.model);
-
         const id = this.props.model.get('id');
-        const parentId = this.props.model.get('parent').get('id');
         const name = this.props.model.get('name');
         const status = this.props.model.get('status');
 
@@ -68,7 +65,7 @@ const Task = React.createClass({
         if (status == 'done') className += ' task-list-item-title-done';
 
         return (
-            <li data-id={id} data-parent-id={parentId}>
+            <li data-id={id}>
                 <div ref="test"  className="task-list-item-checkbox" onClick={this.onClick}>
                     <a href="#">
                         <img alt="not checked" src={src} />

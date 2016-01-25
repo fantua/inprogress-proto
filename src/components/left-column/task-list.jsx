@@ -37,23 +37,43 @@ const TaskList = React.createClass({
         const $node = $(this.refs.sortable);
         const collection = this.props.model.get('tasks');
 
-        if (ui.sender != null) {
-            const id = ui.item.data('id');
-            const parentId = ui.item.data('parent-id');
-            const model = this.props.model.collection.get(parentId).get('tasks').get(id);
+        if (ui.sender != null) return $node.sortable('cancel');
 
-            collection.create(model.toJSON(), true);
-        }
+        const $parent = ui.item.parent()[0];
+        const parentId = $parent.dataset.id;
 
-        $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
-            collection.get(id).save({position: index}, {silent: true});
-        });
+        if (this.props.model.get('id') != parentId) {
+            // Handle connected drag:
+            const parent = this.props.model.collection.get(parentId).get('tasks');
+            const model = collection.get(ui.item.data('id'));
+            const data = model.toJSON();
 
-        if (ui.sender != null) {
+            model.destroy();
+            parent.create(data, true);
+
+            $($parent).sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
+                parent.get(id).save({position: index}, {silent: true});
+            });
+            $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
+                collection.get(id).save({position: index}, {silent: true});
+            });
+
             $node.sortable('cancel');
+
+            parent.sort();
+            collection.sort();
+        } else {
+            // Handle default drag:
+            $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
+                collection.get(id).save({position: index}, {silent: true});
+            });
+
+            $node.sortable('cancel');
+
+            collection.sort();
         }
 
-        collection.sort();
+        console.log('all done');
     },
 
     showDeletePopup() {
@@ -122,9 +142,9 @@ const TaskList = React.createClass({
         }
 
         return (
-            <li className="task-list">
+            <li className="task-list" data-id={id}>
                 <div className="task-list-header" onClick={this.showPopup}>{name}</div>
-                <ul ref="sortable" className="task-list-content connected">
+                <ul ref="sortable" className="task-list-content connected" data-id={id}>
                     {tasks}
                     <li className="task-list-item-new disabled">
                         <form>
