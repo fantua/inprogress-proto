@@ -37,7 +37,7 @@ const TaskList = React.createClass({
         const $node = $(this.refs.sortable);
         const collection = this.props.model.get('tasks');
 
-        if (ui.sender != null) return $node.sortable('cancel');
+        if (ui.sender != null) return;
 
         const $parent = ui.item.parent()[0];
         const parentId = $parent.dataset.id;
