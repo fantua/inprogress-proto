@@ -51,7 +51,9 @@ const LeftColumn = React.createClass({
 
     render() {
 
-        console.log('LeftColumn - render');
+        if (process.env.NODE_ENV === "development") {
+            console.log('LeftColumn - render');
+        }
 
         const taskLists = this.props.collection.map((model) => {
             return <TaskList model={model} key={model.get('id')} />;

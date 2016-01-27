@@ -17,7 +17,7 @@ const TaskList = React.createClass({
     },
 
     componentDidMount() {
-        this.props.model.on('change add:tasks reset:tasks', this.forceUpdate.bind(this, null), this);
+        this.props.model.on('change add:tasks reset:tasks remove:tasks', this.forceUpdate.bind(this, null), this);
 
         $(this.refs.sortable).sortable({
             items: '> li:not(.disabled)',
@@ -73,8 +73,6 @@ const TaskList = React.createClass({
 
             collection.sort();
         }
-
-        console.log('all done');
     },
 
     showDeletePopup() {
@@ -115,14 +113,17 @@ const TaskList = React.createClass({
     createTask(name) {
         const collection = this.props.model.get('tasks');
         const position = (collection.length) ? collection.last().get('position') + 1 : 0;
+        const task = collection.add({name, position});
 
-        collection.add({name, position});
+        UIModel.set('selectedTask', task.get('id'));
         UIModel.set('focusNewTaskFiled', this.props.model.get('id'));
     },
 
     render() {
 
-        console.log('TaskList - render');
+        if (process.env.NODE_ENV === "development") {
+            console.log('Left TaskList - render');
+        }
 
         const id = this.props.model.get('id');
         const name = this.props.model.get('name');

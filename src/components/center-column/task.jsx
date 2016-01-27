@@ -26,7 +26,9 @@ const Task = React.createClass({
 
     render() {
 
-        console.log('Center Task - render');
+        if (process.env.NODE_ENV === "development") {
+            console.log('Center Task - render');
+        }
 
         const id = this.props.model.get('id');
         const name = this.props.model.get('name');

@@ -1,10 +1,15 @@
 import React from 'react';
 import UIModel from '../../models/ui';
 import TaskSelectMixin from '../../mixins/task-select';
+import TaskChangeStatusMixin from '../../mixins/task-change-status';
 
 const Task = React.createClass({
 
-    mixins: [TaskSelectMixin],
+    mixins: [TaskSelectMixin, TaskChangeStatusMixin],
+
+    componentWillMount() {
+        this.setState({selected: (UIModel.get('selectedTask') == this.props.model.get('id'))});
+    },
 
     componentDidMount() {
         this.props.model.on('change', this.forceUpdate.bind(this, null), this);
@@ -16,56 +21,17 @@ const Task = React.createClass({
         UIModel.off(null, null, this);
     },
 
-    onCheckboxClick() {
-        const clickCount = UIModel.get('clickCount') + 1;
-        UIModel.set({clickCount});
-
-        if (clickCount == 1) {
-            UIModel.set('timer', setTimeout(() => {
-                UIModel.set({clickCount: 0});
-                this.handleCheckboxClick();
-            }, 200));
-        } else {
-            clearTimeout(UIModel.get('timer'));
-            UIModel.set({clickCount: 0});
-            this.handleCheckboxDoubleClick();
-        }
-    },
-
-    handleCheckboxClick() {
-        const status = {
-            'initial': 'in-progress',
-            'in-progress': 'initial',
-            'done': 'initial'
-        }[this.props.model.get('status')];
-
-        this.props.model.save({status});
-        if (status == 'in-progress') UIModel.set('selectedTask', this.props.model.get('id'));
-    },
-
-    handleCheckboxDoubleClick() {
-        const status = {
-            'initial': 'done',
-            'in-progress': 'done',
-            'done': 'initial'
-        }[this.props.model.get('status')];
-
-        this.props.model.save({status});
-    },
-
     render() {
 
-        console.log('Left Task - render');
+        if (process.env.NODE_ENV === "development") {
+            console.log('Left Task - render');
+        }
 
         const id = this.props.model.get('id');
         const name = this.props.model.get('name');
         const status = this.props.model.get('status');
 
-        const src = {
-            'initial': 'app-assets/icn-arrow-outline-2x.png',
-            'in-progress': 'app-assets/icn-arrow-fill-2x.png',
-            'done': 'app-assets/icn-v-2x.png'
-        }[status];
+        const src = this.getStatusImage(status);
 
         let titleClassName = 'task-list-item-title';
         if (status == 'done') titleClassName += ' task-list-item-title-done';

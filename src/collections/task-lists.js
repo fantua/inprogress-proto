@@ -21,6 +21,14 @@ const TaskLists = Collection.extend({
         });
 
         return result;
+    },
+
+    getTaskById(id) {
+        let result = null;
+
+        this.find(model => result = model.get('tasks').get(id));
+
+        return result;
     }
 
 });

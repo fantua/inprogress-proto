@@ -26,19 +26,18 @@ const TaskList = Model.extend({
 
     initialize() {
         this.on({
-            'add:tasks': this.handleRelationalAdd,
-            'reset:tasks': this.handleRelationalReset
+            'add:tasks': this.handleRelational,
+            'reset:tasks': this.handleRelational,
+            'remove:tasks': this.handleRelational
         });
     },
 
-    handleRelationalAdd(model, collection, options) {
+    handleRelational(...args) {
+        const options = args[args.length - 1];
+
         if (!options.silentRelational) {
             this.save({silent: true});
         }
-    },
-
-    handleRelationalReset() {
-        this.save({silent: true});
     }
 
 });

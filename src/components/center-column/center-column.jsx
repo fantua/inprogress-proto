@@ -7,7 +7,7 @@ import Task from './task';
 const CenterColumn = React.createClass({
 
     componentDidMount() {
-        this.props.collection.on('update relational:change:status', this.forceUpdate.bind(this, null), this);
+        this.props.collection.on('update relational:change:status remove:tasks', this.forceUpdate.bind(this, null), this);
 
         $(this.refs.sortable).sortable({
             items: '> li',
@@ -41,7 +41,9 @@ const CenterColumn = React.createClass({
 
     render() {
 
-        console.log('CenterColumn - render');
+        if (process.env.NODE_ENV === "development") {
+            console.log('CenterColumn - render');
+        }
 
         let tasks = [];
         UIModel.get('statusList').forEach((model) => {
