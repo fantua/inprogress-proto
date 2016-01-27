@@ -1,6 +1,5 @@
 import 'jquery-ui/sortable';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import UIModel from '../../models/ui';
 import PopupMixin from '../../mixins/popup';
@@ -54,8 +53,8 @@ const LeftColumn = React.createClass({
 
         console.log('LeftColumn - render');
 
-        const taskLists = this.props.collection.map((list) => {
-            return <TaskList model={list} key={list.get('id')} />;
+        const taskLists = this.props.collection.map((model) => {
+            return <TaskList model={model} key={model.get('id')} />;
         });
 
         const popup = () => {

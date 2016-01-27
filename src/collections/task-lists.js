@@ -11,6 +11,16 @@ const TaskLists = Collection.extend({
     // sort collection by position
     comparator(item) {
         return item.get('position');
+    },
+
+    getTasksByStatus(status) {
+        let result = [];
+
+        this.each((model) => {
+            result = result.concat(model.get('tasks').where({status}));
+        });
+
+        return result;
     }
 
 });

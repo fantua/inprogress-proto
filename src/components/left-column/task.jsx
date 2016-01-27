@@ -49,7 +49,7 @@ const Task = React.createClass({
 
     render() {
 
-        console.log('Task - render');
+        console.log('Left Task - render');
 
         const id = this.props.model.get('id');
         const name = this.props.model.get('name');

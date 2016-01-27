@@ -1,11 +1,13 @@
 import 'backbone-relational';
 import { RelationalModel as Model, LocalStorage } from 'backbone';
+import UIModel from './ui';
 
 const Task = Model.extend({
 
     defaults: {
         id: null,
         position: null,
+        statusListPosition: null,
         name: '',
         description: '',
         /* Enum: initial, in-progress, done */
@@ -16,6 +18,24 @@ const Task = Model.extend({
         // Temporary solution:
         if (this.get('id') == null) {
             this.set('id', this.generateId(), {silent: true});
+        }
+
+        this.on('change:status', this.handleChangeStatus);
+    },
+
+    handleChangeStatus(model, value, options) {
+        if (!options.silentRelational) {
+            let statusListPosition = null;
+            if (value == 'in-progress') {
+                const statusList = UIModel.get('statusList');
+                statusListPosition = 0;
+                if (statusList.size) {
+                    statusList.forEach(model => statusListPosition = model.get('statusListPosition') + 1);
+                }
+            }
+
+            this.set({statusListPosition}, {silent: true});
+            this.collection.parent.collection.trigger('relational:change:status');
         }
     },
 
@@ -33,10 +53,6 @@ const Task = Model.extend({
     save(attributes, options = {}) {
         this.set(attributes, options);
         this.collection.parent.save(null, {silent: true});
-    },
-
-    destroy() {
-        this.collection.remove(this);
     }
 
 });

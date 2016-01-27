@@ -17,7 +17,7 @@ const TaskList = React.createClass({
     },
 
     componentDidMount() {
-        this.props.model.on('change', this.forceUpdate.bind(this, null), this);
+        this.props.model.on('change add:tasks reset:tasks', this.forceUpdate.bind(this, null), this);
 
         $(this.refs.sortable).sortable({
             items: '> li:not(.disabled)',
@@ -31,6 +31,7 @@ const TaskList = React.createClass({
 
     componentWillUnmount() {
         this.props.model.off(null, null, this);
+        $(this.refs.sortable).sortable('destroy');
     },
 
     handleSortableUpdate(e, ui) {
@@ -48,14 +49,14 @@ const TaskList = React.createClass({
             const model = collection.get(ui.item.data('id'));
             const data = model.toJSON();
 
-            model.destroy();
-            parent.create(data, true);
+            collection.remove(model, {silent: true});
+            parent.add(data, {silent: true});
 
             $($parent).sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
-                parent.get(id).save({position: index}, {silent: true});
+                parent.get(id).set('position', index, {silent: true});
             });
             $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
-                collection.get(id).save({position: index}, {silent: true});
+                collection.get(id).set('position', index, {silent: true});
             });
 
             $node.sortable('cancel');
@@ -65,7 +66,7 @@ const TaskList = React.createClass({
         } else {
             // Handle default drag:
             $node.sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
-                collection.get(id).save({position: index}, {silent: true});
+                collection.get(id).set('position', index, {silent: true});
             });
 
             $node.sortable('cancel');
@@ -115,7 +116,7 @@ const TaskList = React.createClass({
         const collection = this.props.model.get('tasks');
         const position = (collection.length) ? collection.last().get('position') + 1 : 0;
 
-        collection.create({name, position});
+        collection.add({name, position});
         UIModel.set('focusNewTaskFiled', this.props.model.get('id'));
     },
 
@@ -123,10 +124,10 @@ const TaskList = React.createClass({
 
         console.log('TaskList - render');
 
-        const name = this.props.model.get('name');
         const id = this.props.model.get('id');
-        const tasks = this.props.model.get('tasks').map((task) => {
-            return <Task model={task} key={task.get('id')} />;
+        const name = this.props.model.get('name');
+        const tasks = this.props.model.get('tasks').map((model) => {
+            return <Task model={model} key={model.get('id')} />;
         });
         const popup = () => {
             if (this.state.showPopup)
@@ -135,11 +136,7 @@ const TaskList = React.createClass({
                 return <DeleteTaskListPopup name={name} onSubmit={this.delete} onCancel={this.hideDeletePopup} />;
         };
 
-        let focus = false;
-        if (UIModel.get('focusNewTaskFiled') == id) {
-            focus = true;
-            UIModel.trigger('focusNewTaskFiled');
-        }
+        const autoFocus = UIModel.focusNewTaskFiled(id);
 
         return (
             <li className="task-list" data-id={id}>
@@ -148,7 +145,7 @@ const TaskList = React.createClass({
                     {tasks}
                     <li className="task-list-item-new disabled">
                         <form>
-                            <textarea ref="name" style={{height: '18px'}} autoFocus={focus} onKeyDown={this.handleKeyDown} />
+                            <textarea ref="name" style={{height: '18px'}} autoFocus={autoFocus} onKeyDown={this.handleKeyDown} />
                         </form>
                     </li>
                 </ul>

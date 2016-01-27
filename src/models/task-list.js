@@ -25,7 +25,20 @@ const TaskList = Model.extend({
     ],
 
     initialize() {
+        this.on({
+            'add:tasks': this.handleRelationalAdd,
+            'reset:tasks': this.handleRelationalReset
+        });
+    },
 
+    handleRelationalAdd(model, collection, options) {
+        if (!options.silentRelational) {
+            this.save({silent: true});
+        }
+    },
+
+    handleRelationalReset() {
+        this.save({silent: true});
     }
 
 });
