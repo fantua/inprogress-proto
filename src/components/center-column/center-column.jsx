@@ -11,7 +11,7 @@ const CenterColumn = React.createClass({
 
         $(this.refs.sortable).sortable({
             items: '> li',
-            handle: '> .status-list-item-title',
+            handle: '> .drag-handle',
             forcePlaceholderSize: true,
             placeholderClass: 'drag-placeholder',
             update: this.handleSortableUpdate

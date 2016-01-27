@@ -1,33 +1,38 @@
 import React from 'react';
 import UIModel from '../../models/ui';
+import TaskSelectMixin from '../../mixins/task-select';
 
 const Task = React.createClass({
 
+    mixins: [TaskSelectMixin],
+
     componentDidMount() {
         this.props.model.on('change', this.forceUpdate.bind(this, null), this);
+        UIModel.on('change:selectedTask', this.handleChangeSelectedTask, this);
     },
 
     componentWillUnmount() {
         this.props.model.off(null, null, this);
+        UIModel.off(null, null, this);
     },
 
-    onClick() {
+    onCheckboxClick() {
         const clickCount = UIModel.get('clickCount') + 1;
         UIModel.set({clickCount});
 
         if (clickCount == 1) {
             UIModel.set('timer', setTimeout(() => {
                 UIModel.set({clickCount: 0});
-                this.handleClick();
+                this.handleCheckboxClick();
             }, 200));
         } else {
             clearTimeout(UIModel.get('timer'));
             UIModel.set({clickCount: 0});
-            this.handleDoubleClick();
+            this.handleCheckboxDoubleClick();
         }
     },
 
-    handleClick() {
+    handleCheckboxClick() {
         const status = {
             'initial': 'in-progress',
             'in-progress': 'initial',
@@ -35,9 +40,10 @@ const Task = React.createClass({
         }[this.props.model.get('status')];
 
         this.props.model.save({status});
+        if (status == 'in-progress') UIModel.set('selectedTask', this.props.model.get('id'));
     },
 
-    handleDoubleClick() {
+    handleCheckboxDoubleClick() {
         const status = {
             'initial': 'done',
             'in-progress': 'done',
@@ -61,17 +67,20 @@ const Task = React.createClass({
             'done': 'app-assets/icn-v-2x.png'
         }[status];
 
-        let className = 'task-list-item-title';
-        if (status == 'done') className += ' task-list-item-title-done';
+        let titleClassName = 'task-list-item-title';
+        if (status == 'done') titleClassName += ' task-list-item-title-done';
+
+        let liClassName = '';
+        if (this.state.selected) liClassName += ' task-list-item-selected';
 
         return (
-            <li data-id={id}>
-                <div ref="test"  className="task-list-item-checkbox" onClick={this.onClick}>
+            <li data-id={id} className={liClassName}>
+                <div ref="test"  className="task-list-item-checkbox" onClick={this.onCheckboxClick}>
                     <a href="#">
                         <img alt="not checked" src={src} />
                     </a>
                 </div>
-                <div className={className}>{name}</div>
+                <div onClick={this.handleSelectClick} className={titleClassName}>{name}</div>
             </li>
         );
 

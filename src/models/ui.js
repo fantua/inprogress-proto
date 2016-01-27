@@ -3,10 +3,18 @@ import { Model } from 'backbone';
 const UI = Model.extend({
 
     defaults: {
+        // Task List - @id
         focusNewTaskFiled: null,
+
+        // Double-click handle helpers
         timer: null,
         clickCount: 0,
-        statusList: new Map()
+
+        // Set of status list models
+        statusList: new Map(),
+
+        // Task - @id
+        selectedTask: null
     },
 
     initialize() {
@@ -14,7 +22,7 @@ const UI = Model.extend({
     },
 
     focusNewTaskFiled(id) {
-        if (this.get('focusNewTaskFiled' == id)) {
+        if (this.get('focusNewTaskFiled') == id) {
             this.set('focusNewTaskFiled', null);
 
             return true;
