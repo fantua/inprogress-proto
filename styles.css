@@ -284,7 +284,8 @@ RIGHT COLUMN
 	padding: 0px 10px 11px;
 	font-size: 12px;
 	font-weight: 600;
-	color: rgba(0,0,0,0.3);
+	color: #47BAFF;
+	
 /* 			text-transform: uppercase; */
 }
 
@@ -347,7 +348,8 @@ DIALOG OVERLAYS
 .dialog-screen p {
 	font-size: 13px;
 	font-weight: 400;
-	padding: 0px 24px 24px;
+	padding: 24px 24px 0;
+	margin: 0;
 }
 
 .dialog-screen input[type="text"] {
