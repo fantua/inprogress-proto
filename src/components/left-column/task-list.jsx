@@ -1,5 +1,8 @@
+import 'jquery-ui/sortable';
 import React from 'react';
 import $ from 'jquery';
+import autosize from 'autosize';
+import Config from '../../config';
 import UIModel from '../../models/ui';
 import PopupMixin from '../../mixins/popup';
 import Task from './task';
@@ -23,8 +26,10 @@ const TaskList = React.createClass({
             items: '> li:not(.disabled)',
             handle: '> .task-list-item-title',
             connectWith: '.connected',
+            delay: Config.dragDelay,
+            distance: Config.dragDistance,
             forcePlaceholderSize: true,
-            placeholderClass: 'drag-placeholder',
+            placeholder: 'drag-placeholder',
             update: this.handleSortableUpdate
         });
     },
@@ -32,6 +37,7 @@ const TaskList = React.createClass({
     componentWillUnmount() {
         this.props.model.off(null, null, this);
         $(this.refs.sortable).sortable('destroy');
+        autosize.destroy(this.refs.name);
     },
 
     handleSortableUpdate(e, ui) {
@@ -119,6 +125,10 @@ const TaskList = React.createClass({
         UIModel.set('focusNewTaskFiled', this.props.model.get('id'));
     },
 
+    onFocus() {
+        autosize(this.refs.name);
+    },
+
     render() {
 
         if (process.env.NODE_ENV === "development") {
@@ -146,7 +156,7 @@ const TaskList = React.createClass({
                     {tasks}
                     <li className="task-list-item-new disabled">
                         <form>
-                            <textarea ref="name" style={{height: '18px'}} autoFocus={autoFocus} onKeyDown={this.handleKeyDown} />
+                            <textarea ref="name" rows="1" style={{height: '18px'}} onFocus={this.onFocus} autoFocus={autoFocus} onKeyDown={this.handleKeyDown} />
                         </form>
                     </li>
                 </ul>

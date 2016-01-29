@@ -14,7 +14,11 @@ const EditTaskList = React.createClass({
         e.preventDefault();
         let name = this.refs.name.value.trim();
 
-        if (!name || name == this.props.name) {
+        if (!name) {
+            return;
+        }
+
+        if (name == this.props.name) {
             return this.props.onCancel();
         }
 

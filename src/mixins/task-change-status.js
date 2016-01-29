@@ -1,3 +1,4 @@
+import Config from '../config';
 import UIModel from '../models/ui';
 
 const TaskChangeStatus = {
@@ -25,7 +26,7 @@ const TaskChangeStatus = {
             UIModel.set('timer', setTimeout(() => {
                 UIModel.set({clickCount: 0});
                 this.handleCheckboxClick();
-            }, 200));
+            }, Config.doubleClickDelay));
         } else {
             clearTimeout(UIModel.get('timer'));
             UIModel.set({clickCount: 0});

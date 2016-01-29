@@ -1,6 +1,7 @@
 import 'jquery-ui/sortable';
 import React from 'react';
 import $ from 'jquery';
+import Config from '../../config';
 import UIModel from '../../models/ui';
 import PopupMixin from '../../mixins/popup';
 import Menu from '../library/menu';
@@ -17,16 +18,20 @@ const LeftColumn = React.createClass({
         $(this.refs.sortable).sortable({
             items: '> li:not(.disabled)',
             handle: '> .task-list-header',
+            delay: Config.dragDelay,
+            distance: Config.dragDistance,
             forcePlaceholderSize: true,
-            placeholderClass: 'drag-placeholder',
+            placeholder: 'drag-placeholder',
             update: this.handleSortableUpdate
         });
 
+        window.addEventListener('resize', this.handleResize);
     },
 
     componentWillUnmount() {
         this.props.collection.off(null, null, this);
         $(this.refs.sortable).sortable('destroy');
+        window.removeEventListener('resize', this.handleResize);
     },
 
     handleSortableUpdate(e, ui) {
@@ -39,6 +44,10 @@ const LeftColumn = React.createClass({
         $node.sortable('cancel');
 
         this.props.collection.sort();
+    },
+
+    handleResize() {
+        this.refs.sortable.style.height = (window.innerHeight - 64) + "px";
     },
 
     createTaskList(name) {
@@ -64,12 +73,16 @@ const LeftColumn = React.createClass({
                 return <CreateTaskListPopup onSubmit={this.createTaskList} onCancel={this.hidePopup} />;
         };
 
+        const style = {
+            height: (window.innerHeight - 64) + "px"
+        };
+
         return (
             <div className="left-column">
                 <div className="left-column-header">
                     <Menu />
                 </div>
-                <ul ref="sortable" className="left-column-content" id="left-column-content">
+                <ul ref="sortable" className="left-column-content" style={style}>
                     {taskLists}
                     <li className="disabled">
                         <button className="task-list-header new-list tint-three" onClick={this.showPopup}>New List</button>

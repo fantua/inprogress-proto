@@ -7,7 +7,7 @@ const CreateTaskList = React.createClass({
         let name = this.refs.name.value.trim();
 
         if (!name) {
-            return this.props.onCancel();
+            return;
         }
 
         this.props.onSubmit(name);

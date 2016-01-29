@@ -1,6 +1,7 @@
 import 'jquery-ui/sortable';
 import React from 'react';
 import $ from 'jquery';
+import Config from '../../config';
 import UIModel from '../../models/ui';
 import Task from './task';
 
@@ -12,16 +13,20 @@ const CenterColumn = React.createClass({
         $(this.refs.sortable).sortable({
             items: '> li',
             handle: '> .drag-handle',
+            delay: Config.dragDelay,
+            distance: Config.dragDistance,
             forcePlaceholderSize: true,
-            placeholderClass: 'drag-placeholder',
+            placeholder: 'drag-placeholder',
             update: this.handleSortableUpdate
         });
 
+        window.addEventListener('resize', this.handleResize);
     },
 
     componentWillUnmount() {
         this.props.collection.off(null, null, this);
         $(this.refs.sortable).sortable('destroy');
+        window.removeEventListener('resize', this.handleResize);
     },
 
     componentWillUpdate() {
@@ -39,6 +44,10 @@ const CenterColumn = React.createClass({
         this.forceUpdate();
     },
 
+    handleResize() {
+        this.refs.content.style.height = (window.innerHeight - 64) + "px";
+    },
+
     render() {
 
         if (process.env.NODE_ENV === "development") {
@@ -50,6 +59,10 @@ const CenterColumn = React.createClass({
             tasks.push(<Task model={model} key={model.get('id')} />)
         });
 
+        const style = {
+            height: (window.innerHeight - 64) + "px"
+        };
+
         return (
             <div className="center-column">
                 <div className="center-column-header">
@@ -58,7 +71,7 @@ const CenterColumn = React.createClass({
                     </div>
                     <div className="in-progress-title">In Progress</div>
                 </div>
-                <ul className="center-column-content" id="center-column-content">
+                <ul ref="content" className="center-column-content" style={style}>
                     <li className="status-list">
                         <ul ref="sortable" className="status-list-content">
                             {tasks}

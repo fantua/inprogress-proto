@@ -12,10 +12,12 @@ const Form = React.createClass({
 
     componentDidMount() {
         this.props.model.on('change', this.forceUpdate.bind(this, null), this);
+        window.addEventListener('resize', this.handleResize);
     },
 
     componentWillUnmount() {
         this.props.model.off(null, null, this);
+        window.removeEventListener('resize', this.handleResize);
     },
 
     handleKeyDown(ref, e) {
@@ -33,6 +35,10 @@ const Form = React.createClass({
                 this.refs[ref].blur();
                 break;
         };
+    },
+
+    handleResize() {
+        this.refs.content.style.height = (window.innerHeight - 64) + "px";
     },
 
     delete() {
@@ -58,6 +64,10 @@ const Form = React.createClass({
                 return <DeleteTaskPopup name={name} onSubmit={this.delete} onCancel={this.hidePopup} />;
         };
 
+        const style = {
+            height: (window.innerHeight - 64) + "px"
+        };
+
         return (
             <form>
                 <div className="right-column-header">
@@ -72,7 +82,7 @@ const Form = React.createClass({
                         </button>
                     </div>
                 </div>
-                <div className="task-details-content" id="task-details-content">
+                <div ref="content" className="task-details-content" style={style}>
                     <div className="task-details-title">
                         <textarea ref="name" spellCheck="false" defaultValue={name} onKeyDown={this.handleKeyDown.bind(this, 'name')} style={{height: '22px'}} />
                     </div>
