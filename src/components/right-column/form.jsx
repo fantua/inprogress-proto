@@ -1,4 +1,5 @@
 import React from 'react';
+import autosize from 'autosize';
 import PopupMixin from '../../mixins/popup';
 import TaskChangeStatusMixin from '../../mixins/task-change-status';
 import DeleteTaskPopup from '../popups/delete-task';
@@ -13,32 +14,52 @@ const Form = React.createClass({
     componentDidMount() {
         this.props.model.on('change', this.forceUpdate.bind(this, null), this);
         window.addEventListener('resize', this.handleResize);
+        autosize(this.refs.name);
     },
 
     componentWillUnmount() {
         this.props.model.off(null, null, this);
         window.removeEventListener('resize', this.handleResize);
+        autosize.destroy(this.refs.name);
     },
 
-    handleKeyDown(ref, e) {
+    handleNameKeyDown(e) {
         switch (e.key) {
             case 'Enter':
-                const value = this.refs[ref].value.trim();
-                // Windows - ctrlKey, OS X - metaKey (Cmd)
-                if (ref == 'description' && !(e.ctrlKey || e.metaKey)) break;
-                if (value) {
+                const name = this.refs.name.value.trim();
+                if (name) {
                     e.preventDefault();
-                    this.props.model.save(ref, value);
+                    this.props.model.save({name});
                 }
             case 'Escape':
-                this.refs[ref].value = this.props.model.get(ref);
-                this.refs[ref].blur();
+                this.refs.name.value = this.props.model.get('name');
+                this.refs.name.blur();
+                break;
+        };
+    },
+
+    handleDescriptionKeyDown(e) {
+        switch (e.key) {
+            case 'Enter':
+                const description = this.refs.description.value.trim();
+
+                this.props.model.save({description}, {silent: true});
+                // Windows - ctrlKey, OS X - metaKey (Cmd)
+                if (!(e.ctrlKey || e.metaKey)) break;
+                e.preventDefault();
+            case 'Escape':
+                this.refs.description.value = this.props.model.get('description');
+                this.refs.description.blur();
                 break;
         };
     },
 
     handleResize() {
         this.refs.content.style.height = (window.innerHeight - 64) + "px";
+    },
+
+    onFocus() {
+        autosize.update(this.refs.name);
     },
 
     delete() {
@@ -84,13 +105,13 @@ const Form = React.createClass({
                 </div>
                 <div ref="content" className="task-details-content" style={style}>
                     <div className="task-details-title">
-                        <textarea ref="name" spellCheck="false" defaultValue={name} onKeyDown={this.handleKeyDown.bind(this, 'name')} style={{height: '22px'}} />
+                        <textarea ref="name" rows="1" spellCheck="false" defaultValue={name} onFocus={this.onFocus} onKeyDown={this.handleNameKeyDown} style={{height: '22px'}} />
                     </div>
                     <div className="task-details-subtitle">
                         {listName}
                     </div>
                     <div className="task-details-description">
-                        <textarea ref="description" spellCheck="false" defaultValue={description} onKeyDown={this.handleKeyDown.bind(this, 'description')} style={{height: '300px'}} />
+                        <textarea ref="description" spellCheck="false" defaultValue={description} onKeyDown={this.handleDescriptionKeyDown} style={{height: '300px'}} />
                     </div>
                 </div>
                 {popup()}

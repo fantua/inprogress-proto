@@ -53,10 +53,9 @@ const TaskList = React.createClass({
             // Handle connected drag:
             const parent = this.props.model.collection.get(parentId).get('tasks');
             const model = collection.get(ui.item.data('id'));
-            const data = model.toJSON();
 
-            collection.remove(model, {silent: true});
-            parent.add(data, {silent: true});
+            parent.add(model, {silent: true});
+            model.trigger('change', model);
 
             $($parent).sortable('toArray', {attribute: 'data-id'}).forEach((id, index) => {
                 parent.get(id).set('position', index, {silent: true});
