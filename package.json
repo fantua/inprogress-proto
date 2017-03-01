@@ -1,7 +1,11 @@
 {
   "name": "inprogress-proto",
   "version": "1.0.0",
-  "description": "",
+  "author": "Igor Machuzhak <ihor3000@gmail.com>",
+  "contributors": [
+    "And Gordy <and@gordien.co>"
+  ],
+  "description": "In Progress Prototype",
   "scripts": {
     "start": "npm run _server & npm run _build-dev",
     "debug": "npm run _server & npm run _build-debug ",
